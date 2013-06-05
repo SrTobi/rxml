@@ -1,0 +1,9 @@
+*.swp
+
+*.swap
+
+
+bin/
+doc/html/
+build/
+config/

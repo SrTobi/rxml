@@ -1,0 +1,17 @@
+#pragma once
+#ifndef _TEST_CONFIG_HPP
+#define _TEST_CONFIG_HPP
+
+#include <boost/filesystem/path.hpp>
+
+#define RXML_TEST_PATH "@RXML_CONFIG_TEST_PATH@"
+
+
+inline boost::filesystem::path get_rxml_test_path()
+{
+	return boost::filesystem::path(RXML_TEST_PATH);
+}
+
+
+
+#endif
