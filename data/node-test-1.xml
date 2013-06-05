@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+	<node-test>
+		<info alt="1">
+			<author name="tobi" nick="SirTobi" />
+			<version value="1" />
+		</info>
+		
+		<list>
+			<value>hallo</value>
+			<value>hello</value>
+			<value>good morning</value>
+			<value>guten tag</value>
+		</list>
+		
+		<xxx>
+			<sample value="bla" />
+		</xxx>
+	</node-test>
