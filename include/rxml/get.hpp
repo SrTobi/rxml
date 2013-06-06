@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <rapidxml.hpp>
 #include <string>
+#include "error.hpp"
 
 
 namespace rxml {
@@ -87,6 +88,9 @@ std::basic_string<_Ch> name(const rapidxml::xml_base<_Ch>& _entitiy)
 }
 
 
+
+
+// ########################################### getnode - with ptr ###########################################
 template<typename _Ch>
 rapidxml::xml_node<_Ch>* getnode(rapidxml::xml_node<_Ch>* node, const _Ch* path, std::size_t path_size)
 {
@@ -105,36 +109,55 @@ rapidxml::xml_node<_Ch>* getnode(rapidxml::xml_node<_Ch>* node, const std::basic
 	return getnode(node, path.c_str(), path.size());
 }
 
-template<typename _Ch>
-rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const _Ch* path, std::size_t path_size)
+// ########################################### getnode - with reference and throw function ###########################################
+template<typename _Ch, typename _TGen>
+rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const _Ch* path, std::size_t path_size, _TGen throw_notfound)
 {
 	rapidxml::xml_node<_Ch>* result = getnode(&node, path, path_size);
 
 	if(!result)
 	{
-		// THROW error
+		throw_notfound(node, path);
+		assert(!"An exception should have been thrown!");
 	}
 
 	return *result;
 }
 
+template<typename _Ch, typename _TGen>
+rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const _Ch* path, _TGen throw_notfound)
+{
+	return getnode(node, path, rapidxml::internal::measure(path), throw_notfound);
+}
+
+template<typename _Ch, typename _TGen>
+rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, _TGen throw_notfound)
+{
+	return getnode(node, path.c_str(), path.size(), throw_notfound);
+}
+
+
+
+// ########################################### getnode - with reference ###########################################
+
+
+template<typename _Ch>
+rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const _Ch* path, std::size_t path_size)
+{
+	return getnode(node, path, detail::default_notfound_generator());
+}
+
 template<typename _Ch>
 rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const _Ch* path)
 {
-	return getnode(node, path, rapidxml::internal::measure(path));
+	return getnode(node, path, rapidxml::internal::measure(path), detail::default_notfound_generator());
 }
 
 template<typename _Ch>
 rapidxml::xml_node<_Ch>& getnode(rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path)
 {
-	return getnode(node, path.c_str(), path.size());
+	return getnode(node, path.c_str(), path.size(), detail::default_notfound_generator());
 }
-
-
-
-
-
-
 
 
 }
