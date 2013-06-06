@@ -62,7 +62,7 @@ set(rxml_pch_file				"${PROJECT_SOURCE_DIR}/library/includes.hpp")
 
 ################### setup include directories ###################
 include_directories("include")
-file(GLOB rxml_includes "include/*.hpp")
+file(GLOB rxml_includes "include/rxml/*.hpp")
 
 
 ################### setup additional include directories ###################
