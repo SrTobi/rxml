@@ -17,6 +17,25 @@
 #include <boost/utility.hpp>
 #include <list>
 
+
+
+struct test_assert_exception
+	: public std::runtime_error
+{
+	test_assert_exception(const std::string& _what)
+		: std::runtime_error(_what)
+	{
+	}
+};
+
+#define rxml_assert(_expr)	if(!(_expr)){ throw test_assert_exception(#_expr); }
+
+
+
+
+
+
+
 #define RXML_PARAM_TEST_CASE(_name, ...)	\
 			void _name (__VA_ARGS__)
 

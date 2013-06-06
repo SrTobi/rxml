@@ -4,7 +4,13 @@
 
 #include <stdexcept>
 #include <string>
+#include <cassert>
 
+
+
+#ifndef rxml_assert
+#define rxml_assert(_expr)	assert(_expr)
+#endif
 
 namespace rxml {
 
@@ -18,8 +24,6 @@ public:
 	{
 	}
 };
-
-
 
 
 
