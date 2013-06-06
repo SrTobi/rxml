@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-	<node-test>
+	<node-test name="node-test">
 		<info alt="1">
 			<author name="tobi" nick="SirTobi" />
 			<version value="1" />
