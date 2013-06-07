@@ -2,7 +2,9 @@
 #include "test_config.hpp"
 
 #include "rxml/value.hpp"
+#include "rxml/iterators.hpp"
 #include "rapidxml_utils.hpp"
+#include "rapidxml_iterators.hpp"
 
 
 namespace fs = boost::filesystem;
@@ -82,8 +84,21 @@ struct NodeTestFixture
 	}
 
 
+
+
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file;
+
+private:
+	//#########################################################################################
+	// static tests
+	void static_test_iterator()
+	{
+		rxml::node_iterator<> it;
+		++it;	it++;
+		--it;	it--;
+		*it; it->last_node();
+	}
 };
 
 
