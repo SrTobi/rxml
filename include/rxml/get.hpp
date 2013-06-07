@@ -100,6 +100,7 @@ namespace detail {
 		{
 			const char node_delimiter = _Ch('/');
 			const char attr_delimiter = _Ch(':');
+			const char point_char = _Ch('.');
 
 			const _Ch* end = path + path_size;
 
@@ -118,9 +119,13 @@ namespace detail {
 				{
 					for(;p < end && *p != node_delimiter && *p != attr_delimiter; ++p);
 
-
-					rxml_assert(p != path);
-					n = n->first_node(path, p - path);
+					if(p == path + 2 && *path == point_char && *(path+1) == point_char)
+					{
+						n = n->parent();
+					}else{
+						rxml_assert(p != path);
+						n = n->first_node(path, p - path);
+					}
 
 					path = p + (*p == attr_delimiter? 0 : 1);
 				}else{
