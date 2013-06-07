@@ -155,7 +155,7 @@ namespace detail {
 
 			if(!result)
 			{
-				throw_notfound(node, path);
+				throw_notfound(&node, path);
 				rxml_assert(!"An exception should have been thrown!");
 			}
 
@@ -183,14 +183,14 @@ template<typename _Ch>
 std::basic_string<_Ch> name(const rapidxml::xml_base<_Ch>* _entitiy)
 {
 	if(!_entitiy)
-		return basic_string<_Ch>();
-	return basic_string<_Ch>(_entitiy->name(), _entitiy->name_size());
+		return std::basic_string<_Ch>();
+	return std::basic_string<_Ch>(_entitiy->name(), _entitiy->name_size());
 }
 
 template<typename _Ch>
 std::basic_string<_Ch> name(const rapidxml::xml_base<_Ch>& _entitiy)
 {
-	return basic_string<_Ch>(_entitiy.name(), _entitiy.name_size());
+	return std::basic_string<_Ch>(_entitiy.name(), _entitiy.name_size());
 }
 
 

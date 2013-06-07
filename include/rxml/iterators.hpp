@@ -205,7 +205,7 @@ namespace detail {
 			trivial_ptr_value<_Entity>
 		>
 	{
-		typedef backward_iterator_base<_Entity*, _Entity*, trivial_next_getter<_Entity>,
+		typedef backward_iterator_base<_Entity*, _Entity, trivial_next_getter<_Entity>,
 			trivial_prev_getter<_Entity>, trivial_everything_selector<_Entity>, trivial_ptr_value<_Entity>> base_type;
 
 		simple_iterator(_Entity* entity)
