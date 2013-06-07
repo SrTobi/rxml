@@ -53,7 +53,8 @@ struct notfound_error_generator
 
 struct nomatch_error_generator
 {
-	void operator ()(...) const
+	template<typename _Ch, typename _Entity>
+	void operator ()(const std::basic_string<_Ch>& result, const _Entity*, const std::basic_string<_Ch>& path) const
 	{
 		throw nomatch_error("sequence does not match the regex");
 	}

@@ -100,7 +100,7 @@ std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>& node, const _Ch* pa
 
 	if(!detail::apply_check(result, checker))
 	{
-		throw_nomatch(result, &node, path);
+		throw_nomatch(result, &node, std::basic_string<_Ch>(path));
 		rxml_assert(!"An exception should have been thrown!");
 	}
 
