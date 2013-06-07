@@ -26,19 +26,13 @@ public:
 };
 
 
-
-
-
-
-
-
-
-
-struct notfound_generator
+class nomatch_error
+	: public std::runtime_error
 {
-	void operator ()(...)
+public:
+	nomatch_error(const std::string& _what)
+		: std::runtime_error(_what)
 	{
-		throw notfound_error("failed to find entity");
 	}
 };
 
@@ -47,9 +41,32 @@ struct notfound_generator
 
 
 
+
+
+struct notfound_error_generator
+{
+	void operator ()(...) const
+	{
+		throw notfound_error("failed to find entity");
+	}
+};
+
+struct nomatch_error_generator
+{
+	void operator ()(...) const
+	{
+		throw nomatch_error("sequence does not match the regex");
+	}
+};
+
+
+
+
+
 namespace defaults {
 	// Default tags
 	struct not_found;
+	struct no_match;
 
 	template<typename Tag, bool IsStd = false>
 	struct registry
@@ -62,7 +79,13 @@ namespace defaults {
 	template<bool _Std>
 	struct registry<not_found, _Std>
 	{
-		typedef notfound_generator generator;
+		typedef notfound_error_generator generator;
+	};
+
+	template<bool _Std>
+	struct registry<no_match, _Std>
+	{
+		typedef nomatch_error_generator generator;
 	};
 
 }
@@ -70,6 +93,7 @@ namespace defaults {
 namespace detail {
 
 	typedef defaults::registry<defaults::not_found>::generator default_notfound_generator;
+	typedef defaults::registry<defaults::no_match>::generator default_nomatch_generator;
 }
 
 

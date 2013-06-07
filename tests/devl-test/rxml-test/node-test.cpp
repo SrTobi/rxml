@@ -13,7 +13,7 @@ struct NodeTestFixture
 		: file(xml_path.string().c_str())
 	{
 		BOOST_REQUIRE(file.size());
-		doc.parse<rapidxml::parse_full>(file.data());
+		doc.parse<rapidxml::parse_full | rapidxml::parse_trim_whitespace | rapidxml::parse_normalize_whitespace>(file.data());
 	}
 
 	//#########################################################################################
@@ -53,6 +53,34 @@ struct NodeTestFixture
 		test_rgetnode_throws_exception_const(path);
 	}
 
+	//#########################################################################################
+	void test_value_no_throw_const(const std::string& path, const std::string& expected) const
+	{
+		std::string result = rxml::value(doc, path);
+		BOOST_CHECK_EQUAL(result, expected);
+	}
+
+	void test_value_no_throw(const std::string& path, const std::string& expected)
+	{
+		std::string result = rxml::value(doc, path);
+		BOOST_CHECK_EQUAL(result, expected);
+
+		test_value_no_throw_const(path, expected);
+	}
+
+	//#########################################################################################
+	void test_valuex_no_throw_const(const std::string& path, const std::string& regex) const
+	{
+		rxml::valuex(doc, path, regex);
+	}
+
+	void test_valuex_no_throw(const std::string& path, const std::string& regex)
+	{
+		rxml::valuex(doc, path, regex);
+
+		test_valuex_no_throw_const(path, regex);
+	}
+
 
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file;
@@ -64,7 +92,7 @@ struct NodeTestFixture
 RXML_START_FIXTURE_TEST(NodeTestFixture, get_rxml_test_path() / "node-test-1.xml")
 
 	RXML_FIXTURE_TEST(test_pgetnode_with_has, "");
-	RXML_FIXTURE_TEST(test_pgetnode_with_has, ":name");
+	RXML_FIXTURE_TEST(test_pgetnode_with_has, ":name");	// name does not exists in root !!!
 	RXML_FIXTURE_TEST(test_pgetnode_with_has, "node-test/xxx/sample");
 	RXML_FIXTURE_TEST(test_pgetnode_with_has, "node-test/xxx/sample:attr");
 	RXML_FIXTURE_TEST(test_pgetnode_with_has, "node-test/xxxx/sample", false);
@@ -72,12 +100,25 @@ RXML_START_FIXTURE_TEST(NodeTestFixture, get_rxml_test_path() / "node-test-1.xml
 
 	RXML_FIXTURE_TEST(test_rgetnode_no_throws_exception, "/");
 	RXML_FIXTURE_TEST(test_rgetnode_no_throws_exception, "node-test/info:alt");
+	RXML_FIXTURE_TEST(test_rgetnode_no_throws_exception, "node-test/info/../info/author");
 	RXML_FIXTURE_TEST(test_rgetnode_no_throws_exception, "/node-test/info/author");
 	RXML_FIXTURE_TEST(test_rgetnode_no_throws_exception, "node-test/xxx/sample");
 
 
+	RXML_FIXTURE_TEST(test_rgetnode_throws_exception, "/..");
+	RXML_FIXTURE_TEST(test_rgetnode_throws_exception, "node-test/../..");
 	RXML_FIXTURE_TEST(test_rgetnode_throws_exception, "node-test/info/alt");
 	RXML_FIXTURE_TEST(test_rgetnode_throws_exception, "node-test/info/VERSION");
 	RXML_FIXTURE_TEST(test_rgetnode_throws_exception, "node-test/xxxx/sample");
+
+	RXML_FIXTURE_TEST(test_value_no_throw, "node-test:name", "node-test");
+	RXML_FIXTURE_TEST(test_value_no_throw, "node-test/info:alt", "1");
+	RXML_FIXTURE_TEST(test_value_no_throw, "node-test/info/author:nick", "SirTobi");
+	RXML_FIXTURE_TEST(test_value_no_throw, "node-test/list/value", "hallo");
+	RXML_FIXTURE_TEST(test_value_no_throw, "node-test/info", "Test Info");
+	RXML_FIXTURE_TEST(test_value_no_throw, "node-test/info/author/..", "Test Info");
+
+	RXML_FIXTURE_TEST(test_valuex_no_throw, "node-test/info:alt", "[[:digit:]]");
+	RXML_FIXTURE_TEST(test_valuex_no_throw, "node-test/info", "[a-zA-Z ]+");
 
 RXML_END_FIXTURE_TEST()
