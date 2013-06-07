@@ -267,8 +267,8 @@ public:
 	typedef detail::node_iterator_base<rapidxml::xml_node<_Ch>> base_type;
 
 	node_iterator() : base_type(nullptr) {}
-	node_iterator(rapidxml::xml_node<_Ch>* node) : base_type(node) {}
-	node_iterator(rapidxml::xml_node<_Ch>& node) : base_type(&node) {}
+	node_iterator(rapidxml::xml_node<_Ch>* node) : base_type(node->first_node()) {}
+	node_iterator(rapidxml::xml_node<_Ch>& node) : base_type(node.first_node()) {}
 
 	RXML_ADD_INC_TO_ITERATOR(node_iterator<_Ch>);
 	RXML_ADD_DEC_TO_ITERATOR(node_iterator<_Ch>);
@@ -284,8 +284,8 @@ public:
 	typedef detail::node_iterator_base<const rapidxml::xml_node<_Ch>> base_type;
 
 	const_node_iterator() : base_type(nullptr) {}
-	const_node_iterator(const rapidxml::xml_node<_Ch>* node) : base_type(node) {}
-	const_node_iterator(const rapidxml::xml_node<_Ch>& node) : base_type(&node) {}
+	const_node_iterator(const rapidxml::xml_node<_Ch>* node) : base_type(node->first_node()) {}
+	const_node_iterator(const rapidxml::xml_node<_Ch>& node) : base_type(node.first_node()) {}
 
 	RXML_ADD_INC_TO_ITERATOR(const_node_iterator<_Ch>);
 	RXML_ADD_DEC_TO_ITERATOR(const_node_iterator<_Ch>);
@@ -301,8 +301,8 @@ public:
 	typedef detail::attr_iterator_base<rapidxml::xml_attribute<_Ch>> base_type;
 
 	attribute_iterator() : base_type(nullptr) {}
-	attribute_iterator(rapidxml::xml_attribute<_Ch>* attr) : base_type(attr) {}
-	attribute_iterator(rapidxml::xml_attribute<_Ch>& attr) : base_type(&attr) {}
+	attribute_iterator(rapidxml::xml_node<_Ch>* node) : base_type(node->first_attribute()) {}
+	attribute_iterator(rapidxml::xml_node<_Ch>& node) : base_type(node.first_attribute()) {}
 
 	RXML_ADD_INC_TO_ITERATOR(attribute_iterator<_Ch>);
 	RXML_ADD_DEC_TO_ITERATOR(attribute_iterator<_Ch>);
@@ -318,13 +318,93 @@ public:
 	typedef detail::attr_iterator_base<const rapidxml::xml_attribute<_Ch>> base_type;
 
 	const_attribute_iterator() : base_type(nullptr) {}
-	const_attribute_iterator(const rapidxml::xml_attribute<_Ch>* node) : base_type(attr) {}
-	const_attribute_iterator(const rapidxml::xml_attribute<_Ch>& node) : base_type(&attr) {}
+	const_attribute_iterator(const rapidxml::xml_node<_Ch>* node) : base_type(node->first_attribute()) {}
+	const_attribute_iterator(const rapidxml::xml_node<_Ch>& node) : base_type(node.first_attribute()) {}
 
 	RXML_ADD_INC_TO_ITERATOR(const_attribute_iterator<_Ch>);
 	RXML_ADD_DEC_TO_ITERATOR(const_attribute_iterator<_Ch>);
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ###########################################  ###########################################
+namespace detail
+{
+	template<typename _Entity, typename Iter>
+	class simple_range_wrapper
+	{
+	public:
+		typedef Iter iterator_type;
+
+		simple_range_wrapper(_Entity entity)
+			: m_entity(entity)
+		{
+		}
+
+
+		iterator_type begin()
+		{
+			return iterator_type(m_entity);
+		}
+
+		iterator_type end()
+		{
+			return iterator_type();
+		}
+
+	private:
+		_Entity const m_entity;
+	};
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, node_iterator<_Ch>>
+	children(rapidxml::xml_node<_Ch>* node)
+{
+	assert(node);
+	return detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, node_iterator<_Ch>>(node);
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_node_iterator<_Ch>>
+	children(const rapidxml::xml_node<_Ch>* node)
+{
+	assert(node);
+	return detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_node_iterator<_Ch>>(node);
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, node_iterator<_Ch>>
+	children(rapidxml::xml_node<_Ch>& node)
+{
+	return detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, node_iterator<_Ch>>(&node);
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_node_iterator<_Ch>>
+	children(const rapidxml::xml_node<_Ch>& node)
+{
+	return detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_node_iterator<_Ch>>(&node);
+}
 
 
 

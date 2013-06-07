@@ -4,7 +4,7 @@
 #include "rxml/value.hpp"
 #include "rxml/iterators.hpp"
 #include "rapidxml_utils.hpp"
-
+#include "rapidxml_iterators.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -95,6 +95,8 @@ private:
 	void static_bidirectional_iterator_test()
 	{
 		Iter it;
+		Iter it1(doc);
+		Iter it2(&doc);
 		++it;	it++;
 		--it;	it--;
 		it == it; it != it;
@@ -110,6 +112,10 @@ private:
 
 		static_bidirectional_iterator_test<rxml::attribute_iterator<>>();
 		static_bidirectional_iterator_test<rxml::const_attribute_iterator<>>();
+
+		// test range based
+		for(auto& test : rxml::children(doc));
+		for(auto& test : rxml::children(&doc));
 	}
 };
 
