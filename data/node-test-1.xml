@@ -1,8 +1,10 @@
 <?xml version="1.0" ?>
 	<node-test name="node-test">
 		<info alt="1">
+			Test Info
 			<author name="tobi" nick="SirTobi" />
 			<version value="1" />
+			<text>lalala</text>
 		</info>
 		
 		<list>
