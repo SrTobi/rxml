@@ -263,7 +263,42 @@ typename detail::return_type<rapidxml::xml_attribute<_Ch>, _Node>::type& getattr
 	return getnode(node, path, detail::default_notfound_generator());
 }
 
+// ########################################### get  ###########################################
+template<typename _Node, typename _Ch>
+typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type* get(_Node* node, const _Ch* path, std::size_t path_size = 0)
+{
+	return detail::get_impl<rapidxml::xml_base<_Ch>, _Node, _Ch>::execute(node, path, path_size? path_size : rapidxml::internal::measure(path));
+}
 
+template<typename _Node, typename _Ch>
+typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type* get(_Node* node, const std::basic_string<_Ch>& path)
+{
+	return detail::get_impl<rapidxml::xml_base<_Ch>, _Node, _Ch>::execute(node, path.c_str(), path.size());
+}
+
+template<typename _Node, typename _Ch, typename _TGen>
+typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const _Ch* path, _TGen throw_notfound, std::size_t path_size = 0)
+{
+	return detail::get_impl<rapidxml::xml_base<_Ch>, _Node, _Ch>::execute(node, path, path_size? path_size : rapidxml::internal::measure(path), throw_notfound);
+}
+
+template<typename _Node, typename _Ch, typename _TGen>
+typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const std::basic_string<_Ch>& path, _TGen throw_notfound)
+{
+	return detail::get_impl<rapidxml::xml_base<_Ch>, _Node, _Ch>::execute(node, path.c_str(), path.size(), throw_notfound);
+}
+
+template<typename _Node, typename _Ch>
+typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const _Ch* path, std::size_t path_size = 0)
+{
+	return getnode(node, path, path_size, detail::default_notfound_generator());
+}
+
+template<typename _Node, typename _Ch>
+typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const std::basic_string<_Ch>& path)
+{
+	return getnode(node, path, detail::default_notfound_generator());
+}
 
 }
 
