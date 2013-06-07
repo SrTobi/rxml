@@ -174,7 +174,7 @@ namespace detail {
 	};
 
 	template<typename _Entity>
-	struct trivial_next_getter
+	struct trivial_next_node_getter
 	{
 		_Entity* operator ()(_Entity* e)
 		{
@@ -184,7 +184,7 @@ namespace detail {
 	};
 
 	template<typename _Entity>
-	struct trivial_prev_getter
+	struct trivial_prev_node_getter
 	{
 		_Entity* operator ()(_Entity* e)
 		{
@@ -194,25 +194,61 @@ namespace detail {
 	};
 
 	template<typename _Entity>
-	struct simple_iterator
-		: public backward_iterator_base
-		<
-			_Entity*,
-			_Entity,
-			trivial_next_getter<_Entity>,
-			trivial_prev_getter<_Entity>,
-			trivial_everything_selector<_Entity>,
-			trivial_ptr_value<_Entity>
-		>
+	struct trivial_next_attr_getter
 	{
-		typedef backward_iterator_base<_Entity*, _Entity, trivial_next_getter<_Entity>,
-			trivial_prev_getter<_Entity>, trivial_everything_selector<_Entity>, trivial_ptr_value<_Entity>> base_type;
+		_Entity* operator ()(_Entity* e)
+		{
+			rxml_assert(e);
+			return e->next_attribute();
+		}
+	};
 
-		simple_iterator(_Entity* entity)
+	template<typename _Entity>
+	struct trivial_prev_attr_getter
+	{
+		_Entity* operator ()(_Entity* e)
+		{
+			rxml_assert(e && e->previous_attribute());
+			return e->previous_attribute();
+		}
+	};
+
+#define RXML_BUILD_ITERATOR_SELECTOR(_name, ...)	struct _name: public __VA_ARGS__ { typedef __VA_ARGS__ base_type;
+#define RXML_END_SELECTOR()							};
+
+
+	template<typename _Entity>
+	RXML_BUILD_ITERATOR_SELECTOR(node_iterator_base, backward_iterator_base
+													<
+														_Entity*,
+														_Entity,
+														trivial_next_node_getter<_Entity>,
+														trivial_prev_node_getter<_Entity>,
+														trivial_everything_selector<_Entity>,
+														trivial_ptr_value<_Entity>
+													>)
+		node_iterator_base(_Entity* entity)
 			: base_type(entity, trivial_everything_selector<_Entity>())
 		{
 		}
-	};
+	RXML_END_SELECTOR();
+
+	
+	template<typename _Entity>
+	RXML_BUILD_ITERATOR_SELECTOR(attr_iterator_base, backward_iterator_base
+													<
+														_Entity*,
+														_Entity,
+														trivial_next_attr_getter<_Entity>,
+														trivial_prev_attr_getter<_Entity>,
+														trivial_everything_selector<_Entity>,
+														trivial_ptr_value<_Entity>
+													>)
+		attr_iterator_base(_Entity* entity)
+			: base_type(entity, trivial_everything_selector<_Entity>())
+		{
+		}
+	RXML_END_SELECTOR();
 }
 
 
@@ -221,13 +257,14 @@ namespace detail {
 #define RXML_ADD_DEC_TO_ITERATOR(_cls)	_cls& operator--()		{ this->_prev(); return *this; }	\
 										_cls  operator--(int)	{ auto tmp = std::move(*this); this->_prev(); return tmp; }
 
+// ########################################### node_iterator ###########################################
 template<typename _Ch = char>
 class node_iterator
-	: public detail::simple_iterator<rapidxml::xml_node<_Ch>>
+	: public detail::node_iterator_base<rapidxml::xml_node<_Ch>>
 	, public std::iterator<std::bidirectional_iterator_tag, rapidxml::xml_node<_Ch>>
 {
 public:
-	typedef detail::simple_iterator<rapidxml::xml_node<_Ch>> base_type;
+	typedef detail::node_iterator_base<rapidxml::xml_node<_Ch>> base_type;
 
 	node_iterator() : base_type(nullptr) {}
 	node_iterator(rapidxml::xml_node<_Ch>* node) : base_type(node) {}
@@ -237,8 +274,56 @@ public:
 	RXML_ADD_DEC_TO_ITERATOR(node_iterator<_Ch>);
 };
 
+// ########################################### const_node_iterator###########################################
+template<typename _Ch = char>
+class const_node_iterator
+	: public detail::node_iterator_base<const rapidxml::xml_node<_Ch>>
+	, public std::iterator<std::bidirectional_iterator_tag, const rapidxml::xml_node<_Ch>>
+{
+public:
+	typedef detail::node_iterator_base<const rapidxml::xml_node<_Ch>> base_type;
 
+	const_node_iterator() : base_type(nullptr) {}
+	const_node_iterator(const rapidxml::xml_node<_Ch>* node) : base_type(node) {}
+	const_node_iterator(const rapidxml::xml_node<_Ch>& node) : base_type(&node) {}
 
+	RXML_ADD_INC_TO_ITERATOR(const_node_iterator<_Ch>);
+	RXML_ADD_DEC_TO_ITERATOR(const_node_iterator<_Ch>);
+};
+
+// ########################################### attribute_iterator ###########################################
+template<typename _Ch = char>
+class attribute_iterator
+	: public detail::attr_iterator_base<rapidxml::xml_attribute<_Ch>>
+	, public std::iterator<std::bidirectional_iterator_tag, rapidxml::xml_attribute<_Ch>>
+{
+public:
+	typedef detail::attr_iterator_base<rapidxml::xml_attribute<_Ch>> base_type;
+
+	attribute_iterator() : base_type(nullptr) {}
+	attribute_iterator(rapidxml::xml_attribute<_Ch>* attr) : base_type(attr) {}
+	attribute_iterator(rapidxml::xml_attribute<_Ch>& attr) : base_type(&attr) {}
+
+	RXML_ADD_INC_TO_ITERATOR(attribute_iterator<_Ch>);
+	RXML_ADD_DEC_TO_ITERATOR(attribute_iterator<_Ch>);
+};
+
+// ########################################### const_attribute_iterator###########################################
+template<typename _Ch = char>
+class const_attribute_iterator
+	: public detail::attr_iterator_base<const rapidxml::xml_attribute<_Ch>>
+	, public std::iterator<std::bidirectional_iterator_tag, const rapidxml::xml_attribute<_Ch>>
+{
+public:
+	typedef detail::attr_iterator_base<const rapidxml::xml_attribute<_Ch>> base_type;
+
+	const_attribute_iterator() : base_type(nullptr) {}
+	const_attribute_iterator(const rapidxml::xml_attribute<_Ch>* node) : base_type(attr) {}
+	const_attribute_iterator(const rapidxml::xml_attribute<_Ch>& node) : base_type(&attr) {}
+
+	RXML_ADD_INC_TO_ITERATOR(const_attribute_iterator<_Ch>);
+	RXML_ADD_DEC_TO_ITERATOR(const_attribute_iterator<_Ch>);
+};
 
 
 

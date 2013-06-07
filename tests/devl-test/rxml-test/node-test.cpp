@@ -91,12 +91,25 @@ struct NodeTestFixture
 private:
 	//#########################################################################################
 	// static tests
-	void static_test_iterator()
+	template<typename Iter>
+	void static_bidirectional_iterator_test()
 	{
-		rxml::node_iterator<> it;
+		Iter it;
 		++it;	it++;
 		--it;	it--;
-		*it; it->last_node();
+		it == it; it != it;
+		*it; it->parent();
+		it = it;
+		it = std::move(it);
+	}
+
+	void static_test_iterators()
+	{
+		static_bidirectional_iterator_test<rxml::node_iterator<>>();
+		static_bidirectional_iterator_test<rxml::const_node_iterator<>>();
+
+		static_bidirectional_iterator_test<rxml::attribute_iterator<>>();
+		static_bidirectional_iterator_test<rxml::const_attribute_iterator<>>();
 	}
 };
 
