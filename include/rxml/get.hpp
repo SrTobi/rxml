@@ -51,6 +51,27 @@ const rapidxml::xml_node<_Ch>& getroot(const rapidxml::xml_base<_Ch>& _entity)
 
 namespace detail {
 
+	template<bool _Cond>
+	struct return_if
+	{
+		template<typename _Ty1>
+		inline static _Ty1* ret(_Ty1* r)
+		{
+			return r;
+		}
+	};
+
+	template<>
+	struct return_if<false>
+	{
+		template<typename _Ty1>
+		inline static std::nullptr_t ret(_Ty1*)
+		{
+			return nullptr;
+		}
+	};
+
+
 	template<typename _Result, typename _Node, typename _Ch>
 	struct get_impl
 	{
@@ -76,25 +97,6 @@ namespace detail {
 				>::type return_type;
 
 
-		template<bool _Cond>
-		struct return_if
-		{
-			template<typename _Ty1>
-			inline static _Ty1* ret(_Ty1* r)
-			{
-				return r;
-			}
-		};
-
-		template<>
-		struct return_if<false>
-		{
-			template<typename _Ty1>
-			inline static std::nullptr_t ret(_Ty1*)
-			{
-				return nullptr;
-			}
-		};
 
 		static inline return_type* execute(node_type* node, const _Ch* path, std::size_t path_size)
 		{

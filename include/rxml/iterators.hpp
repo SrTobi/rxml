@@ -133,10 +133,10 @@ namespace detail {
 		{
 			_prevget_type prev;
 			do {
-				m_entitiy = prev(m_entitiy);
+				this->m_entitiy = prev(this->m_entitiy);
 
-			} while(!m_select(m_entitiy));
-			_set();
+			} while(!this->m_select(this->m_entitiy));
+			this->_set();
 		}
 	};
 
