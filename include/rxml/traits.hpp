@@ -62,7 +62,6 @@ namespace detail {
 		static const rapid_xml_types xml_type = xml_document_type;
 	};
 
-
 	template<typename _XmlEntity>
 	struct check_xml_type
 	{
@@ -71,7 +70,7 @@ namespace detail {
 
 	template<bool _Cond>
 	struct bool_result
-		: public typename std::conditional<_Cond, std::true_type, std::false_type>::type
+		: public std::conditional<_Cond, std::true_type, std::false_type>::type
 	{
 	};
 }
@@ -82,6 +81,13 @@ struct is_rapidxml_type
 	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type != no_xml_type>
 {
 };
+
+template<typename _Ty>
+struct is_base_type
+	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type == xml_base_type>
+{
+};
+
 
 template<typename _Ty>
 struct is_node_type
@@ -103,9 +109,9 @@ struct is_document_type
 
 template<typename _XmlType>
 struct char_type
-	: check_xml_type<detail::check_xml_type<_XmlType>>
+	: detail::check_xml_type<_XmlType>
 {
-	typedef detail::rapidxml_type_impl<_XmlType>::char_type type;
+	typedef typename detail::rapidxml_type_impl<_XmlType>::char_type type;
 };
 
 
