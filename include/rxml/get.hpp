@@ -223,13 +223,13 @@ typename detail::return_type<rapidxml::xml_node<_Ch>, _Node>::type& getnode(_Nod
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_node<_Ch>, _Node>::type& getnode(_Node& node, const _Ch* path, std::size_t path_size = 0)
 {
-	return getnode(node, path, path_size, detail::default_notfound_generator());
+	return getnode(node, path, path_size, defaults::registry<defaults::not_found>::generator());
 }
 
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_node<_Ch>, _Node>::type& getnode(_Node& node, const std::basic_string<_Ch>& path)
 {
-	return getnode(node, path, detail::default_notfound_generator());
+	return getnode(node, path, defaults::registry<defaults::not_found>::generator());
 }
 
 
@@ -261,13 +261,13 @@ typename detail::return_type<rapidxml::xml_attribute<_Ch>, _Node>::type& getattr
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_attribute<_Ch>, _Node>::type& getattr(_Node& node, const _Ch* path, std::size_t path_size = 0)
 {
-	return getnode(node, path, path_size, detail::default_notfound_generator());
+	return getnode(node, path, path_size, defaults::registry<defaults::not_found>::generator());
 }
 
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_attribute<_Ch>, _Node>::type& getattr(_Node& node, const std::basic_string<_Ch>& path)
 {
-	return getnode(node, path, detail::default_notfound_generator());
+	return getnode(node, path, defaults::registry<defaults::not_found>::generator());
 }
 
 // ########################################### get  ###########################################
@@ -298,13 +298,13 @@ typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& n
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const _Ch* path, std::size_t path_size = 0)
 {
-	return get(node, path, path_size, detail::default_notfound_generator());
+	return get(node, path, path_size, defaults::registry<defaults::not_found>::generator());
 }
 
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const std::basic_string<_Ch>& path)
 {
-	return get(node, path, detail::default_notfound_generator());
+	return get(node, path, defaults::registry<defaults::not_found>::generator());
 }
 
 }

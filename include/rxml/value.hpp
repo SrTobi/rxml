@@ -61,7 +61,7 @@ std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>& node, const _Ch* pat
 template<typename _Ch>
 std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>& node, const _Ch* path, std::size_t path_size = 0)
 {
-	return rxml::value(node, path, detail::default_notfound_generator(), path_size);
+	return rxml::value(node, path, defaults::registry<defaults::not_found>::generator(), path_size);
 }
 
 template<typename _Ch, typename _TGen>
@@ -73,7 +73,7 @@ std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>& node, const std::bas
 template<typename _Ch>
 std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path)
 {
-	return rxml::value(node, path, detail::default_notfound_generator());
+	return rxml::value(node, path, defaults::registry<defaults::not_found>::generator());
 }
 
 template<typename _Ch, typename _TGen>
@@ -86,7 +86,7 @@ std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>* node, const _Ch* pat
 template<typename _Ch>
 std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>* node, const _Ch* path, std::size_t path_size = 0)
 {
-	return rxml::value(node, path, detail::default_notfound_generator(), path_size);
+	return rxml::value(node, path, defaults::registry<defaults::not_found>::generator(), path_size);
 }
 
 template<typename _Ch, typename _TGen>
@@ -98,7 +98,7 @@ std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>* node, const std::bas
 template<typename _Ch>
 std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path)
 {
-	return rxml::value(node, path, detail::default_notfound_generator());
+	return rxml::value(node, path, defaults::registry<defaults::not_found>::generator());
 }
 
 
@@ -120,7 +120,7 @@ std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>& node, const _Ch* pa
 template<typename _Ch, typename _F>
 std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const _F& checker, std::size_t path_size = 0)
 {
-	return rxml::valuex(node, path, checker, detail::default_notfound_generator(), detail::default_nomatch_generator(), path_size);
+	return rxml::valuex(node, path, checker, defaults::registry<defaults::not_found>::generator(), defaults::registry<defaults::no_match>::generator(), path_size);
 }
 
 template<typename _Ch, typename _F, typename _TGen, typename _RGen>
@@ -132,7 +132,7 @@ std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>& node, const std::ba
 template<typename _Ch, typename _F>
 std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const _F& checker)
 {
-	return rxml::valuex(node, path, checker, detail::default_notfound_generator(), detail::default_nomatch_generator());
+	return rxml::valuex(node, path, checker, defaults::registry<defaults::not_found>::generator(), defaults::registry<defaults::no_match>::generator());
 }
 
 template<typename _Ch, typename _F, typename _TGen, typename _RGen>
@@ -145,7 +145,7 @@ std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>* node, const _Ch* pa
 template<typename _Ch, typename _F>
 std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const _F& checker, std::size_t path_size = 0)
 {
-	return rxml::valuex(node, path, checker, detail::default_notfound_generator(), detail::default_nomatch_generator(), path_size);
+	return rxml::valuex(node, path, checker, defaults::registry<defaults::not_found>::generator(), defaults::registry<defaults::no_match>::generator(), path_size);
 }
 
 template<typename _Ch, typename _F, typename _TGen, typename _RGen>
@@ -157,7 +157,7 @@ std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>* node, const std::ba
 template<typename _Ch, typename _F>
 std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const _F& checker)
 {
-	return rxml::valuex(node, path, checker, detail::default_notfound_generator(), detail::default_nomatch_generator());
+	return rxml::valuex(node, path, checker, defaults::registry<defaults::not_found>::generator(), defaults::registry<defaults::no_match>::generator());
 }
 
 
@@ -178,20 +178,23 @@ std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const _Ch* p
 
 	return fallback;
 }
+
+
+
 template<typename _Ch, typename _F>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback, const _F& checker)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, const _F& checker)
 {
 	return rxml::valuefb(node, path.c_str(), fallback, path.size(), checker);
 }
 
 template<typename _Ch>
-std::basic_string<_Ch> valuebf(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size = 0)
 {
 	return rxml::valuefb(node, path, fallback, path_size, detail::no_checker<_Ch>());
 }
 
 template<typename _Ch>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback)
 {
 	return rxml::valuefb(node, path, fallback, detail::no_checker<_Ch>());
 }
@@ -199,26 +202,26 @@ std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::b
 
 
 template<typename _Ch, typename _F>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size, const _F& checker)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size, const _F& checker)
 {
 	return rxml::valuefb(&node, path, fallback, path_size, detail::no_checker<_Ch>());
 }
 
 template<typename _Ch, typename _F>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback, const _F& checker)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, const _F& checker)
 {
 	return rxml::valuefb(node, path.c_str(), fallback, path.size(), checker);
 }
 
 
 template<typename _Ch>
-std::basic_string<_Ch> valuebf(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size = 0)
 {
 	return rxml::valuefb(&node, path, fallback, path_size, detail::no_checker<_Ch>());
 }
 
 template<typename _Ch>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback)
 {
 	return rxml::valuefb(node, path, fallback, detail::no_checker<_Ch>());
 }
