@@ -298,13 +298,13 @@ typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& n
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const _Ch* path, std::size_t path_size = 0)
 {
-	return getnode(node, path, path_size, detail::default_notfound_generator());
+	return get(node, path, path_size, detail::default_notfound_generator());
 }
 
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_base<_Ch>, _Node>::type& get(_Node& node, const std::basic_string<_Ch>& path)
 {
-	return getnode(node, path, detail::default_notfound_generator());
+	return get(node, path, detail::default_notfound_generator());
 }
 
 }
