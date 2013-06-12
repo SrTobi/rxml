@@ -92,6 +92,14 @@ struct NodeTestFixture
 		BOOST_CHECK_EQUAL(loc, expected);
 	}
 
+	//#########################################################################################
+	void test_valuefb(const std::string& path, const std::string& fallback, const std::string& expected)
+	{
+		std::string result = rxml::valuefb(doc, path, fallback);
+
+		BOOST_CHECK_EQUAL(result, expected);
+	}
+
 
 	rapidxml::xml_document<> doc;
 	rapidxml::file<> file;
@@ -169,5 +177,10 @@ RXML_START_FIXTURE_TEST(NodeTestFixture, get_rxml_test_path() / "node-test-1.xml
 #else
 	RXML_FIXTURE_TEST(test_locate, "node-test/info:alt", "/node-test/info/alt");
 #endif
+
+	RXML_FIXTURE_TEST(test_valuefb, "node-test/info:alt", "---", "1");
+	RXML_FIXTURE_TEST(test_valuefb, "node-test/inf", "---", "---");
+	RXML_FIXTURE_TEST(test_valuefb, "node-test/info/author/..", "---", "Test Info");
+	RXML_FIXTURE_TEST(test_valuefb, "node-test/info/author/...", "---", "---");
 
 RXML_END_FIXTURE_TEST()

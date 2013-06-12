@@ -12,6 +12,11 @@ namespace rxml {
 
 namespace detail {
 
+	template<typename _Ch>
+	struct no_checker
+	{
+	};
+
 	template<typename _Ch, typename _F>
 	bool apply_check(const std::basic_string<_Ch>& seq, const _F& check)
 	{
@@ -36,6 +41,11 @@ namespace detail {
 		return apply_check(seq, std::basic_regex<_Ch>(regex));
 	}
 
+	template<typename _Ch>
+	bool apply_check(const std::basic_string<_Ch>& seq, const no_checker<_Ch>& check)
+	{
+		return true;
+	}
 
 }
 
@@ -151,10 +161,67 @@ std::basic_string<_Ch> valuex(const rapidxml::xml_node<_Ch>* node, const std::ba
 }
 
 
-// ########################################### value with regex-check ###########################################
+// ########################################### value with default parameter ###########################################
+template<typename _Ch, typename _F>
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size, const _F& checker)
+{
+	auto* entity = rxml::get(node, path, path_size);
+
+	if(entity)
+	{
+		std::basic_string<_Ch> val(entity->value(), entity->value_size());
+		if(detail::apply_check(val, checker))
+		{
+			return std::move(val);
+		}
+	}
+
+	return fallback;
+}
+template<typename _Ch, typename _F>
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback, const _F& checker)
+{
+	return rxml::valuefb(node, path.c_str(), fallback, path.size(), checker);
+}
+
+template<typename _Ch>
+std::basic_string<_Ch> valuebf(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size)
+{
+	return rxml::valuefb(node, path, fallback, path_size, detail::no_checker<_Ch>());
+}
+
+template<typename _Ch>
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback)
+{
+	return rxml::valuefb(node, path, fallback, detail::no_checker<_Ch>());
+}
 
 
 
+template<typename _Ch, typename _F>
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size, const _F& checker)
+{
+	return rxml::valuefb(&node, path, fallback, path_size, detail::no_checker<_Ch>());
+}
+
+template<typename _Ch, typename _F>
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback, const _F& checker)
+{
+	return rxml::valuefb(node, path.c_str(), fallback, path.size(), checker);
+}
+
+
+template<typename _Ch>
+std::basic_string<_Ch> valuebf(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const std::basic_string<_Ch>& fallback, std::size_t path_size)
+{
+	return rxml::valuefb(&node, path, fallback, path_size, detail::no_checker<_Ch>());
+}
+
+template<typename _Ch>
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const std::basic_string<_Ch>& fallback)
+{
+	return rxml::valuefb(node, path, fallback, detail::no_checker<_Ch>());
+}
 
 }
 
