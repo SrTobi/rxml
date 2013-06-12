@@ -62,10 +62,19 @@ namespace detail {
 		static const rapid_xml_types xml_type = xml_document_type;
 	};
 
+
+	template<typename _Ty>
+	struct rapidxml_type: public rapidxml_type_impl<typename std::remove_cv<typename std::remove_pointer<_Ty>::type>::type>
+	{
+	};
+
+
+
+
 	template<typename _XmlEntity>
 	struct check_xml_type
 	{
-		static_assert(rapidxml_type_impl<_XmlEntity>::xml_type != no_xml_type, "_XmlEntity is not a rapidxml type!");
+		static_assert(rapidxml_type<_XmlEntity>::xml_type != no_xml_type, "_XmlEntity is not a rapidxml type!");
 	};
 
 	template<bool _Cond>
@@ -78,32 +87,32 @@ namespace detail {
 
 template<typename _Ty>
 struct is_rapidxml_type
-	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type != no_xml_type>
+	: public detail::bool_result<detail::rapidxml_type<_Ty>::xml_type != no_xml_type>
 {
 };
 
 template<typename _Ty>
 struct is_base_type
-	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type == xml_base_type>
+	: public detail::bool_result<detail::rapidxml_type<_Ty>::xml_type == xml_base_type>
 {
 };
 
 
 template<typename _Ty>
 struct is_node_type
-	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type == xml_node_type>
+	: public detail::bool_result<detail::rapidxml_type<_Ty>::xml_type == xml_node_type>
 {
 };
 
 template<typename _Ty>
 struct is_attribute_type
-	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type == xml_attribute_type>
+	: public detail::bool_result<detail::rapidxml_type<_Ty>::xml_type == xml_attribute_type>
 {
 };
 
 template<typename _Ty>
 struct is_document_type
-	: public detail::bool_result<detail::rapidxml_type_impl<_Ty>::xml_type == xml_document_type>
+	: public detail::bool_result<detail::rapidxml_type<_Ty>::xml_type == xml_document_type>
 {
 };
 
@@ -111,7 +120,7 @@ template<typename _XmlType>
 struct char_type
 	: detail::check_xml_type<_XmlType>
 {
-	typedef typename detail::rapidxml_type_impl<_XmlType>::char_type type;
+	typedef typename detail::rapidxml_type<_XmlType>::char_type type;
 };
 
 

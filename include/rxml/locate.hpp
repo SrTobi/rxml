@@ -131,6 +131,14 @@ std::basic_string<typename traits::char_type<_Entity>::type> locate(const _Entit
 	return detail::locate_imple<_Entity, typename traits::char_type<_Entity>::type>(entity);
 }
 
+template<typename _Entity>
+std::basic_string<typename traits::char_type<_Entity>::type> locate(const _Entity* entity)
+{
+	if(entity)
+		return locate(*entity);
+	else
+		return std::basic_string<typename traits::char_type<_Entity>::type>();
+}
 
 
 
