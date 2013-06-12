@@ -4,11 +4,11 @@
 
 #include <stdexcept>
 #include <string>
-#include <cassert>
 
 
 
 #ifndef rxml_assert
+#include <cassert>
 #define rxml_assert(_expr)	assert(_expr)
 #endif
 
@@ -90,14 +90,6 @@ namespace defaults {
 	};
 
 }
-
-namespace detail {
-
-	typedef defaults::registry<defaults::not_found>::generator default_notfound_generator;
-	typedef defaults::registry<defaults::no_match>::generator default_nomatch_generator;
-}
-
-
 
 }
 
