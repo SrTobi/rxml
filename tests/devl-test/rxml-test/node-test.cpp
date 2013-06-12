@@ -3,6 +3,7 @@
 
 #include "rxml/value.hpp"
 #include "rxml/iterators.hpp"
+#include "rxml/locate.hpp"
 #include "rapidxml_utils.hpp"
 #include "rapidxml_iterators.hpp"
 
@@ -82,7 +83,14 @@ struct NodeTestFixture
 		test_valuex_no_throw_const(path, regex);
 	}
 
+	//#########################################################################################
+	void test_locate(const std::string& path, const std::string& expected)
+	{
+		auto& entity = rxml::get(doc, path);
+		const std::string loc = rxml::locate(entity);
 
+		BOOST_CHECK_EQUAL(loc, expected);
+	}
 
 
 	rapidxml::xml_document<> doc;
@@ -153,5 +161,13 @@ RXML_START_FIXTURE_TEST(NodeTestFixture, get_rxml_test_path() / "node-test-1.xml
 
 	RXML_FIXTURE_TEST(test_valuex_no_throw, "node-test/info:alt", "[[:digit:]]");
 	RXML_FIXTURE_TEST(test_valuex_no_throw, "node-test/info", "[a-zA-Z ]+");
+
+
+	RXML_FIXTURE_TEST(test_locate, "node-test/info", "/node-test/info");
+#ifndef _RXML_TYPE_CHECK_HACK
+	RXML_FIXTURE_TEST(test_locate, "node-test/info:alt", "/node-test/info:alt");
+#else
+	RXML_FIXTURE_TEST(test_locate, "node-test/info:alt", "/node-test/info/alt");
+#endif
 
 RXML_END_FIXTURE_TEST()
