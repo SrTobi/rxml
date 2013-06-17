@@ -43,12 +43,13 @@ namespace detail {
 		{
 		}
 
-		forward_iterator_base(forward_iterator_base&& other)
+		// Don't need that?
+		/*forward_iterator_base(forward_iterator_base&& other)
 			: m_entitiy(other.m_entitiy)
 			, m_value(std::move(other.m_value))
 			, m_select(std::move(other.m_select))
 		{
-		}
+		}*/
 
 		reference operator *()
 		{
