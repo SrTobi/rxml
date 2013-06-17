@@ -5,7 +5,7 @@
 #include "rxml/iterators.hpp"
 #include "rxml/locate.hpp"
 #include "rapidxml_utils.hpp"
-#include "rapidxml_iterators.hpp"
+//#include "rapidxml_iterators.hpp"
 
 namespace fs = boost::filesystem;
 
