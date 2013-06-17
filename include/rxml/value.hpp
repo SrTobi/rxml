@@ -47,6 +47,11 @@ namespace detail {
 		return true;
 	}
 
+	template<typename _Ty>
+	struct identity
+	{
+		typedef _Ty type;
+	};
 }
 
 
@@ -182,19 +187,19 @@ std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const _Ch* p
 
 
 template<typename _Ch, typename _F>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, const _F& checker)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback, const _F& checker)
 {
 	return rxml::valuefb(node, path.c_str(), fallback, path.size(), checker);
 }
 
 template<typename _Ch>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size = 0)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const _Ch* path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size = 0)
 {
 	return rxml::valuefb(node, path, fallback, path_size, detail::no_checker<_Ch>());
 }
 
 template<typename _Ch>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::basic_string<_Ch>& path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback)
 {
 	return rxml::valuefb(node, path, fallback, detail::no_checker<_Ch>());
 }
@@ -202,26 +207,26 @@ std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>* node, const std::b
 
 
 template<typename _Ch, typename _F>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size, const _F& checker)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size, const _F& checker)
 {
 	return rxml::valuefb(&node, path, fallback, path_size, detail::no_checker<_Ch>());
 }
 
 template<typename _Ch, typename _F>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, const _F& checker)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback, const _F& checker)
 {
 	return rxml::valuefb(node, path.c_str(), fallback, path.size(), checker);
 }
 
 
 template<typename _Ch>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const typename std::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size = 0)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const _Ch* path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback, std::size_t path_size = 0)
 {
 	return rxml::valuefb(&node, path, fallback, path_size, detail::no_checker<_Ch>());
 }
 
 template<typename _Ch>
-std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const typename std::identity<std::basic_string<_Ch>>::type& fallback)
+std::basic_string<_Ch> valuefb(const rapidxml::xml_node<_Ch>& node, const std::basic_string<_Ch>& path, const typename detail::identity<std::basic_string<_Ch>>::type& fallback)
 {
 	return rxml::valuefb(node, path, fallback, detail::no_checker<_Ch>());
 }
