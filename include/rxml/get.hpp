@@ -223,7 +223,7 @@ typename detail::return_type<rapidxml::xml_node<_Ch>, _Node>::type& getnode(_Nod
 template<typename _Node, typename _Ch>
 typename detail::return_type<rapidxml::xml_node<_Ch>, _Node>::type& getnode(_Node& node, const _Ch* path, std::size_t path_size = 0)
 {
-	return getnode(node, path, path_size, defaults::registry<defaults::not_found>::generator());
+	return getnode(node, path, defaults::registry<defaults::not_found>::generator(), path_size);
 }
 
 template<typename _Node, typename _Ch>
