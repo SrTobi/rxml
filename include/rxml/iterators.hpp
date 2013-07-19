@@ -409,6 +409,40 @@ detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_node_iterator
 
 
 
+
+template<typename _Ch>
+detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, attribute_iterator<_Ch>>
+	attributes(rapidxml::xml_node<_Ch>* node)
+{
+	assert(node);
+	return detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, attribute_iterator<_Ch>>(node);
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_attribute_iterator<_Ch>>
+	attributes(const rapidxml::xml_node<_Ch>* node)
+{
+	assert(node);
+	return detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_attribute_iterator<_Ch>>(node);
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, attribute_iterator<_Ch>>
+	attributes(rapidxml::xml_node<_Ch>& node)
+{
+	return detail::simple_range_wrapper<rapidxml::xml_node<_Ch>*, attribute_iterator<_Ch>>(&node);
+}
+
+template<typename _Ch>
+detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_attribute_iterator<_Ch>>
+	attributes(const rapidxml::xml_node<_Ch>& node)
+{
+	return detail::simple_range_wrapper<const rapidxml::xml_node<_Ch>*, const_attribute_iterator<_Ch>>(&node);
+}
+
+
+
+
 }
 
 
