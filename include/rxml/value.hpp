@@ -56,11 +56,24 @@ namespace detail {
 
 
 // ########################################### value ###########################################
+template<typename _Ch>
+std::basic_string<_Ch> value(const rapidxml::xml_base<_Ch>& entity)
+{
+	return std::basic_string<_Ch>(entity.value(), entity.value_size());
+}
+
+template<typename _Ch>
+std::basic_string<_Ch> value(const rapidxml::xml_base<_Ch>* entity)
+{
+	assert(node);
+	return rxml::value(*entity)
+}
+
 template<typename _Ch, typename _TGen>
 std::basic_string<_Ch> value(const rapidxml::xml_node<_Ch>& node, const _Ch* path, _TGen throw_notfound, std::size_t path_size = 0)
 {
 	auto& entity = rxml::get(node, path, throw_notfound, path_size);
-	return std::basic_string<_Ch>(entity.value(), entity.value_size());
+	return rxml::value(entity);
 }
 
 template<typename _Ch>
