@@ -65,8 +65,8 @@ std::basic_string<_Ch> value(const rapidxml::xml_base<_Ch>& entity)
 template<typename _Ch>
 std::basic_string<_Ch> value(const rapidxml::xml_base<_Ch>* entity)
 {
-	assert(node);
-	return rxml::value(*entity)
+	assert(entity);
+	return rxml::value(*entity);
 }
 
 template<typename _Ch, typename _TGen>
