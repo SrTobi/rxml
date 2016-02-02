@@ -4,6 +4,7 @@
 
 #include <rapidxml.hpp>
 #include <iterator>
+#include "error.hpp"
 
 
 namespace rxml {
